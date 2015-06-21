@@ -11,6 +11,10 @@ namespace AuthProcess;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use AuthProcess\Model\UserTable;
+use AuthProcess\Model\User;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
 
 class Module
 {
@@ -36,4 +40,34 @@ class Module
             ),
         );
     }
+    //PROVIDING A FACTORY THAT CREATES AN USERTABLE
+    public function getServiceConfig()
+    {
+        return array(
+            //ModuleManager merge all factories before passing them to the ServiceManager
+            //UserTable uses Service Manager to create below "UserTableGateway" and inject to itself
+
+            //UserTableGateway is created by getting "Zend\Db\Adapter\Adapter" also from ServiceManager
+            //and using it to create a "TableGateway"
+
+            //"TableGateway" is informed mto use User to create new result row
+            //"TableGateway" don't create  result sets and entities each time.The system clones
+            // a previously instantiated object following "Constructor Best Practices and the Prototype Pattern"
+
+            'factories' => array(
+                'AuthProcess\Model\UserTable' =>  function($sm) {
+                    $tableGateway = $sm->get('UserTableGateway');
+                    $table = new UserTable($tableGateway);
+                    return $table;
+                },
+                'UserTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new User());
+                    return new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
+                },
+            ),
+        );
+    }
+
 }
