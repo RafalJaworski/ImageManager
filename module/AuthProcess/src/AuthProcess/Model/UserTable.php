@@ -8,6 +8,7 @@
  *
  * We will use this to perform operations on the database table for our user
  */
+namespace AuthProcess\Model;
 
 use Zend\Db\TableGateway\TableGateway;
 
