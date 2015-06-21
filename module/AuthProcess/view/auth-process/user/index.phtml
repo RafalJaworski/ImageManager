@@ -1,1 +1,12 @@
-AuthProcess index.phtml content test
+<?php foreach ($users as $user) : ?>
+    <tr>
+        <td><?php echo $this->escapeHtml($album->title);?></td>
+        <td><?php echo $this->escapeHtml($album->artist);?></td>
+        <td>
+            <a href="<?php echo $this->url('album',
+                array('action'=>'edit', 'id' => $album->id));?>">Edit</a>
+            <a href="<?php echo $this->url('album',
+                array('action'=>'delete', 'id' => $album->id));?>">Delete</a>
+        </td>
+    </tr>
+<?php endforeach; ?>

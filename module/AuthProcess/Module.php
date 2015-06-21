@@ -55,7 +55,7 @@ class Module
             // a previously instantiated object following "Constructor Best Practices and the Prototype Pattern"
 
             'factories' => array(
-                'AuthProcess\Model\UserTable' =>  function($sm) {
+                'AuthProcess\Model\UserTable' =>  function($sm) {   //This key is used in Controller
                     $tableGateway = $sm->get('UserTableGateway');
                     $table = new UserTable($tableGateway);
                     return $table;

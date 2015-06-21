@@ -11,12 +11,19 @@ namespace AuthProcess\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use AuthProcess\Model\UserTable;
 
 class UserController extends AbstractActionController
 {
+    public $userTable;
+
     public function indexAction()
     {
-        return new ViewModel();
+//        echo "<pre>";
+//        var_dump($this->getUserTable()->fetchAll());die;
+        return new ViewModel(array(
+            'users'=>$this->getUserTable()
+        ));
     }
 
     public function addAction()
@@ -32,6 +39,15 @@ class UserController extends AbstractActionController
     public function deleteAction()
     {
         return new ViewModel();
+    }
+
+    public function getUserTable()
+    {
+        if (!$this->userTable) {
+            $sm = $this->getServiceLocator();
+            $this->userTable = $sm->get('AuthProcess\Model\UserTable'); //key from Module.php factories
+        }
+        return $this->userTable;
     }
 
 }
